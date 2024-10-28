@@ -2,7 +2,18 @@
 yoink-package-maker is a script made in Node.js that takes in a project folder and converts it into a [Yoink](https://github.com/Ponali/w93-yoink) package.
 It supports having multiple JavaScript files, and minifying them.
 
-*This README is in work-in-progress! Please wait for when new information comes up.*
+# Setting up
+Setting it up works as any normal Node.js repo:
+```
+git clone https://github.com/Ponali/yoink-package-maker.git
+cd yoink-package-maker
+npm install
+```
+
+# Using the program
+To run the script, run `node make.js [projectFolder]`. It will automatically make the package at `[packageID].ynk`.
+
+If you would like to have another output file, add the `-o [outputFilename]` argument.
 
 # Making a project folder
 A project folder must have the following files:
@@ -55,6 +66,8 @@ Coding any app will have a similar experience to coding a boot script. There is 
 ## Built-in APIs
 These are the built-in APIs given by Yoink that can be used to make your app more easily cross-version with V2 and V3.
 
+**WARNING**: Those APIs do not come with yoink-package-maker, but [Yoink itself](https://github.com/Ponali/w93-yoink). Those APIs can change at any moment.
+
 ### JSZip
 JSZip is included in Yoink, and can be used without needing an external package to handle the job.
 The current way to include JSZip is to get it from `library.JSZip`.
@@ -63,11 +76,28 @@ The current way to include JSZip is to get it from `library.JSZip`.
 A GUI can be easily made by using built-in methods and properties from `library.yoinkgui`.
 Here are all of the properties directly provided:
 - `GUIWindow` (Class): Makes a new window when created. Will make a new property called `element` being the HTML element of the content of the window.
-- `displayMessage` (Function): Displays a message box. Arguments: `input` (String, message to show), `callback` (Function, function that gets ran once the user clicks the OK button.)
-- `displayQuestion`
-- `displayPrompt`
+- `displayMessage` (Function): Displays a message box. Arguments: `input` (String/Object, message to show), `callback` (Function, function that gets ran once the user clicks the OK button.)
+- `displayQuestion` (Function): Displays a question message box, with a Yes and No button. Arguments: `input` (String/Object, message to show), `callback` (Function, first argument is a Boolean)
+- `displayPrompt` (Function): Displays a text input prompt, with an OK and Cancel button. Arguments: `input` (String/Object, message to show), `defaultAnswer` (String), `callback` (Function, first argument is a String (OK button), or `false` (Cancel button))
 
 ### Save Manager
+A save manager can handle saving anything that is an Object, Array, String, Number, Boolean, and `null`.
 
+**WARNING**: It is generally not reccomended to use TypedArrays with a Save Manager. If you do so, it will be converted into an Object. (e.g. `new Uint8Array([4,1,3,2])` -> `{"0":4,"1":1,"2":3,"3":2}`)
 
-# Using the program
+**NOTE**: All apps have their own "save". To access them, use the `library.SaveManager` class.
+
+**WARNING**: If you want to use `library.SaveManager`, there is a big chance that it could change. Please look back as soon as possible when a change like this happens.
+
+You can take a premade save manager for the current app from `this.ownSaveManager`.
+
+**NOTE**: Libraries and Boot scripts can also have a premade save manager. When making the premade save manager, the app IDs are replaced with `library` and `boot`.
+
+Here are all the function that can be used with a save manager:
+- `exists(name,callback)`: Check if a property exists or not.
+- `get(name,callback)`: Get the contents of a property.
+- `save(name,data,callback)`: Set the contents of a property.
+- `remove(name,callback)`: Remove a property.
+
+All functions always has a callback argument at the end. For `save` and `remove`, there are no returned arguments. `exists` returns a Boolean argument.
+`get` returns two arguments: The first is the data, the second is an error (if there is one). Make sure to check for errors in your script when using `get`.
