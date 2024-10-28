@@ -1,0 +1,7 @@
+{
+    "id":"testingpack","version":"1.0",
+    "name":"Testing","description":"Example testing package, using available APIs from Yoink for testing","author":"Ponali",
+    "dependencies":[],
+    "apps":["exampleAppId"],
+    "source":false
+}
